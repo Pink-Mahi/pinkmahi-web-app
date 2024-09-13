@@ -1,3 +1,5 @@
+// Device Dashboard
+
 import React, { useEffect, useState } from 'react';
 import { ref, onValue, update, remove } from 'firebase/database'; // Firebase functions including remove
 import { rtdb } from '../../../firebaseConfig';
