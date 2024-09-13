@@ -1,4 +1,4 @@
-// Device Dashboard by jonathan yadon
+// Device Dashboard by jonathan yadon 9132024
 
 import React, { useEffect, useState } from 'react';
 import { ref, onValue, update, remove } from 'firebase/database'; // Firebase functions including remove
