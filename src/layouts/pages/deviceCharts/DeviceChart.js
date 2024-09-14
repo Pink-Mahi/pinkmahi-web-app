@@ -1,3 +1,4 @@
+// Device charts page
 import React, { useState, useEffect } from 'react';
 import { ref, onValue } from 'firebase/database'; // Firebase import
 import { rtdb } from '../../../firebaseConfig';
