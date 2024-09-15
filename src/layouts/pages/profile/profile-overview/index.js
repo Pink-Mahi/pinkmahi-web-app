@@ -15,7 +15,6 @@ import { ref, set } from 'firebase/database';
 import { firestore, rtdb, auth } from '../../../../firebaseConfig'; // Adjusted imports
 
 function Overview() {
-  // State for managing contact info, devices, and third-party provider
   const [primaryContact, setPrimaryContact] = useState({
     name: '',
     phone1: '',
@@ -23,15 +22,18 @@ function Overview() {
     email1: '',
     email2: '',
   });
+
   const [emergencyContacts, setEmergencyContacts] = useState([
     { name: '', phone: '', email: '', relationship: '' },
     { name: '', phone: '', email: '', relationship: '' },
   ]);
-  const [devices, setDevices] = useState([]); // To manage the devices added by the user
+
+  const [devices, setDevices] = useState([]);
   const [newDevice, setNewDevice] = useState({
     deviceId: '',
     location: '',
   });
+
   const [thirdPartyContact, setThirdPartyContact] = useState({
     company: '',
     contactName: '',
@@ -41,7 +43,6 @@ function Overview() {
     clientId: '',
   });
 
-  // Function to handle changes to emergency contacts
   const handleEmergencyContactChange = (index, field, value) => {
     const updatedContacts = [...emergencyContacts];
     updatedContacts[index][field] = value;
@@ -64,8 +65,8 @@ function Overview() {
         await setDoc(userDocRef, {
           deviceId: newDevice.deviceId,
           location: newDevice.location,
-          deviceType: 'sensorType',
-        });
+          deviceType: 'sensorType',  // You can update this based on the actual sensor type
+        }, { merge: true });
 
         // Add the device to the global Devices collection (Realtime Database)
         const rtdbRef = ref(rtdb, `Devices/${newDevice.deviceId}`);
@@ -77,57 +78,43 @@ function Overview() {
           active: true,
         });
 
+        // Update local device state
         setDevices([...devices, newDevice]);
         setNewDevice({ deviceId: '', location: '' });
+
+        console.log('Device added successfully');
       } catch (error) {
-        console.error('Error adding device: ', error);
+        console.error('Error adding device:', error.message);
       }
     } else {
       console.log('No user is signed in');
     }
   };
-  const testWrite = async () => {
-    const user = auth.currentUser;
-    if (user) {
-      try {
-        const testDocRef = doc(firestore, 'TestCollection', 'testDoc');
-        await setDoc(testDocRef, {
-          testField: 'Hello Firestore!',
-        });
-        console.log('Test document written successfully');
-      } catch (error) {
-        console.error('Test write failed:', error.message);
-      }
-    }
-  };
 
   const handleSaveProfile = async () => {
-    const user = auth.currentUser; // Ensure the user is logged in
+    const user = auth.currentUser;
 
     if (user) {
       try {
-        console.log('Saving profile for user:', user.uid); // Debug UID
-        console.log('Primary Contact:', primaryContact); // Debug profile data
+        console.log('Saving profile for user:', user.uid);
+        console.log('Primary Contact:', primaryContact);
         console.log('Emergency Contacts:', emergencyContacts);
         console.log('Third Party Contact:', thirdPartyContact);
 
-        // Log Firestore reference to check correctness
         const userDocRef = doc(firestore, 'UsersData', user.uid);
-        console.log('Firestore Document Reference:', userDocRef);
 
-        // Add the user's profile data to Firestore
         await setDoc(userDocRef, {
           primaryContact,
           emergencyContacts,
           thirdPartyContact,
-        });
+        }, { merge: true });
 
         console.log('Profile saved successfully');
       } catch (error) {
-        console.error('Error saving profile:', error.message, error); // Debug Firestore errors
+        console.error('Error saving profile:', error.message);
       }
     } else {
-      console.log('No user is signed in'); // Handle case where no user is authenticated
+      console.log('No user is signed in');
     }
   };
 
@@ -135,13 +122,8 @@ function Overview() {
     <DashboardLayout>
       <DashboardNavbar />
       <Header />
-      <MDBox
-        mt={3}
-        mb={3}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-      >
+      <MDBox mt={3} mb={3} display="flex" flexDirection="column" alignItems="center">
+        
         {/* Primary Contact Info */}
         <Grid item xs={12} md={8} lg={6}>
           <Card>
@@ -156,10 +138,7 @@ function Overview() {
                   fullWidth
                   value={primaryContact.name}
                   onChange={(e) =>
-                    setPrimaryContact({
-                      ...primaryContact,
-                      name: e.target.value,
-                    })
+                    setPrimaryContact({ ...primaryContact, name: e.target.value })
                   }
                 />
               </MDBox>
@@ -169,10 +148,7 @@ function Overview() {
                   fullWidth
                   value={primaryContact.phone1}
                   onChange={(e) =>
-                    setPrimaryContact({
-                      ...primaryContact,
-                      phone1: e.target.value,
-                    })
+                    setPrimaryContact({ ...primaryContact, phone1: e.target.value })
                   }
                 />
               </MDBox>
@@ -182,10 +158,7 @@ function Overview() {
                   fullWidth
                   value={primaryContact.phone2}
                   onChange={(e) =>
-                    setPrimaryContact({
-                      ...primaryContact,
-                      phone2: e.target.value,
-                    })
+                    setPrimaryContact({ ...primaryContact, phone2: e.target.value })
                   }
                 />
               </MDBox>
@@ -195,10 +168,7 @@ function Overview() {
                   fullWidth
                   value={primaryContact.email1}
                   onChange={(e) =>
-                    setPrimaryContact({
-                      ...primaryContact,
-                      email1: e.target.value,
-                    })
+                    setPrimaryContact({ ...primaryContact, email1: e.target.value })
                   }
                 />
               </MDBox>
@@ -208,10 +178,7 @@ function Overview() {
                   fullWidth
                   value={primaryContact.email2}
                   onChange={(e) =>
-                    setPrimaryContact({
-                      ...primaryContact,
-                      email2: e.target.value,
-                    })
+                    setPrimaryContact({ ...primaryContact, email2: e.target.value })
                   }
                 />
               </MDBox>
@@ -294,11 +261,7 @@ function Overview() {
                     fullWidth
                     value={contact.name}
                     onChange={(e) =>
-                      handleEmergencyContactChange(
-                        index,
-                        'name',
-                        e.target.value
-                      )
+                      handleEmergencyContactChange(index, 'name', e.target.value)
                     }
                   />
                 </MDBox>
@@ -308,11 +271,7 @@ function Overview() {
                     fullWidth
                     value={contact.phone}
                     onChange={(e) =>
-                      handleEmergencyContactChange(
-                        index,
-                        'phone',
-                        e.target.value
-                      )
+                      handleEmergencyContactChange(index, 'phone', e.target.value)
                     }
                   />
                 </MDBox>
@@ -322,11 +281,7 @@ function Overview() {
                     fullWidth
                     value={contact.email}
                     onChange={(e) =>
-                      handleEmergencyContactChange(
-                        index,
-                        'email',
-                        e.target.value
-                      )
+                      handleEmergencyContactChange(index, 'email', e.target.value)
                     }
                   />
                 </MDBox>
@@ -336,11 +291,7 @@ function Overview() {
                     fullWidth
                     value={contact.relationship}
                     onChange={(e) =>
-                      handleEmergencyContactChange(
-                        index,
-                        'relationship',
-                        e.target.value
-                      )
+                      handleEmergencyContactChange(index, 'relationship', e.target.value)
                     }
                   />
                 </MDBox>
@@ -457,3 +408,4 @@ function Overview() {
 }
 
 export default Overview;
+
