@@ -31,5 +31,37 @@
     ],
     "react/jsx-curly-spacing": [2, "never"]
   },
-  "settings": { "import/resolver": { "node": { "paths": ["src"] } } }
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"]
+      }
+    }
+  },
+  "overrides": [
+    {
+      "files": ["functions/**/*.js"],  // Targets all JS files in the functions directory
+      "env": {
+        "node": true,
+        "es2021": true
+      },
+      "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+      },
+      "extends": ["eslint:recommended", "prettier"],
+      "rules": {
+        "prettier/prettier": [
+          "error",
+          {
+            "endOfLine": "auto"
+          }
+        ],
+        "no-console": "off",  // Console logs are fine in Firebase functions
+        "prefer-arrow-callback": "error",  // Enforce arrow functions for callbacks
+        "quotes": ["error", "double", { "allowTemplateLiterals": true }]  // Ensure consistent quoting
+      }
+    }
+  ]
 }
+

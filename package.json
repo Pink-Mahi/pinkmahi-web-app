@@ -2,6 +2,7 @@
   "name": "material-dashboard-2-pro-react",
   "version": "2.2.1",
   "private": true,
+  "homepage": "/",
   "author": "Creative Tim",
   "license": "See license in https://www.creative-tim.com/license",
   "description": "React version of Material Dashboard 2 PRO by Creative Tim",
@@ -54,7 +55,8 @@
   },
   "scripts": {
     "start": "cross-env GENERATE_SOURCEMAP=false react-scripts start",
-    "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "react-scripts build",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "deploy": "firebase deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -81,14 +83,15 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "cross-env": "^7.0.3",
-    "eslint": "9.9.0",
-    "eslint-config-prettier": "9.1.0",
+    "eslint": "^9.9.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-jsx-a11y": "6.9.0",
-    "eslint-plugin-prettier": "5.2.1",
-    "eslint-plugin-react": "7.35.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "4.6.2",
-    "prettier": "3.3.3"
+    "prettier": "^3.3.3",
+    "source-map-explorer": "^2.5.3"
   },
   "overrides": {
     "svgo": "3.0.2"
