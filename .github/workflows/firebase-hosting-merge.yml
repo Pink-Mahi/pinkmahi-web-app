@@ -18,18 +18,15 @@ jobs:
       # Install dependencies
       - run: npm install
 
-      # Build the project (assuming you have a build step)
+      # Build the project (if applicable)
       - run: npm run build
 
-      # Deploy Firebase Hosting, Functions, Firestore, and Realtime Database
+      # Deploy to Firebase Hosting, Functions, Firestore, and Realtime Database
       - name: Deploy to Firebase
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PINK_MAHI_282C2 }}
-          projectId: pink-mahi-282c2
-        run:
-          |
-          # Deploy Hosting, Functions, Firestore, and Realtime Database
+        run: |
           firebase deploy --only hosting,functions,firestore,database
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_PINK_MAHI_282C2 }}
+          FIREBASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
